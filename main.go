@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -9,26 +11,39 @@ import (
 	"time"
 )
 
-type ExRates struct { // comment
+//ExRates
+type ExRates struct {
 	Rates map[string]float32 `json:"rates"` //map
 	Base  string             `json:"base"`
 	Date  string             `json:"date"`
 }
 
 func main() {
+	const URL = "https://api.exchangeratesapi.io/latest?base="
+	wordPtr := flag.String("currency", "USD", "a string")
+	flag.Parse()
+	//	fmt.Println("word:", *wordPtr)
+	//Sujungiam URL su base
+	var buffer bytes.Buffer
+	buffer.WriteString(URL)
+	buffer.WriteString(*wordPtr)
+	URLName := buffer.String()
+	fmt.Println(buffer.String())
+	//var content []byte
+	base, date, rates := FromURL(URLName)
 	//reader := bufio.newReader(os.Stdin)
 	//var opt string
-	var content []byte
-	fmt.Println("Press 'f' if you want to use File or press something else if you want to use URL...")
+
+	/*fmt.Println("Press 'f' if you want to use File or press something else if you want to use URL...")
 	var opt string
 	fmt.Scanln(&opt)
 	if opt == "f" {
-		DocName := "rates.json"
-		content := FromDocument(DocName)
+		//	DocName := "rates.json"
+		//content = FromDocument(DocName)
 	} else {
 		URLName := "https://api.exchangeratesapi.io/latest?base=USD"
-		content := FromURL(URLName)
-	}
+		content = FromURL(URLName)
+	}*/
 	//fmt.Println(first)
 	//opt, _ := reader.readString("\n")
 	/*switch opt {
@@ -44,35 +59,23 @@ func main() {
 	}*/
 	//DocName := "rates.json"
 	//content := FromDocument(DocName)
-	exrates := ExRates{}
-	// json.Unmarshal(content, &friends)
-	err2 := json.Unmarshal(content, &exrates)
-	if err2 != nil {
-		fmt.Println("Error JSON Unmarshalling")
-		fmt.Println(err2.Error())
-	}
-	fmt.Printf("Base value: %s \n", exrates.Base)
-	fmt.Printf("Date: %s \n", exrates.Date)
+
+	fmt.Printf("Base value: %s \n", base)
+	fmt.Printf("Date: %s \n", date)
 	//	if len(exrates.Rates) != 0 {aaasdas
 	//	number := exrates.Rates["HUF"]
 	//	fmt.Printf("Test: %f \n", number)kk
 	//fmt.Printf("Rates: %v \n", exrates.Rates)
 	//}
-	for k, v := range exrates.Rates { // map
-		fmt.Printf("Currency: %s Value: \t%.2f\n", k, v)
+	for k, v := range rates { // map
+		fmt.Printf("Currency: %s Value: %8.2f\n", k, v)
 	}
 
+	//URL := append("kaboom", *wordPrt)
+	//fmt.Println("Test: %v", URL)
 }
 
-func FromDocument(DocName string) []byte {
-	content, err := ioutil.ReadFile(DocName)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	return content
-}
-
-func FromURL(URLName string) []byte {
+func FromURL(URLName string) (string, string, map[string]float32) {
 	spaceClient := http.Client{
 		Timeout: time.Second * 10, // 2 secs
 	}
@@ -88,5 +91,12 @@ func FromURL(URLName string) []byte {
 	if readErr != nil {
 		log.Fatal(readErr)
 	}
-	return body
+	exrates := ExRates{}
+	// json.Unmarshal(content, &friends)
+	err2 := json.Unmarshal(body, &exrates)
+	if err2 != nil {
+		fmt.Println("Error JSON Unmarshalling")
+		fmt.Println(err2.Error())
+	}
+	return exrates.Base, exrates.Date, exrates.Rates
 }
