@@ -28,7 +28,7 @@ func main() {
 	}
 	fmt.Printf("Base value: %s \n", exrates.Base)
 	fmt.Printf("Date: %s \n", exrates.Date)
-	//	if len(exrates.Rates) != 0 {
+	//	if len(exrates.Rates) != 0 {aaasdas
 	//	number := exrates.Rates["HUF"]
 	//	fmt.Printf("Test: %f \n", number)
 	//fmt.Printf("Rates: %v \n", exrates.Rates)
