@@ -28,11 +28,13 @@ func main() {
 	}
 	fmt.Printf("Base value: %s \n", exrates.Base)
 	fmt.Printf("Date: %s \n", exrates.Date)
-	number := exrates.Rates["HUF"]
-	fmt.Printf("Test: %s \n", number)
-	fmt.Printf("Rates: %s \n", exrates.Rates)
-	//	for _, x := range ExRates { // map
-	//		fmt.Printf("%s \n", x.Rates)
-	//	}
+	//	if len(exrates.Rates) != 0 {
+	//	number := exrates.Rates["HUF"]
+	//	fmt.Printf("Test: %f \n", number)
+	fmt.Printf("Rates: %v \n", exrates.Rates)
+	//}
+	//for _, x := range exrates.Rates { // map
+	//	fmt.Printf("Currency: ", x, "Value: ", exrates.Rates[x], "\n")
+	//}
 
 }
