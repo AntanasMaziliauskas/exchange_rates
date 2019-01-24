@@ -55,7 +55,7 @@ func main() {
 	fmt.Printf("Date: %s \n", exrates.Date)
 	//	if len(exrates.Rates) != 0 {aaasdas
 	//	number := exrates.Rates["HUF"]
-	//	fmt.Printf("Test: %f \n", number)
+	//	fmt.Printf("Test: %f \n", number)kk
 	//fmt.Printf("Rates: %v \n", exrates.Rates)
 	//}
 	for k, v := range exrates.Rates { // map
