@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -24,13 +23,14 @@ func main() {
 	flag.Parse()
 	//	fmt.Println("word:", *wordPtr)
 	//Sujungiam URL su base
-	var buffer bytes.Buffer
-	buffer.WriteString(URL)
-	buffer.WriteString(*wordPtr)
-	URLName := buffer.String()
-	fmt.Println(buffer.String())
+	// var buffer bytes.Buffer
+	// buffer.WriteString(URL)
+	// buffer.WriteString(*wordPtr)
+	// URLName := buffer.String()
+	URLName := fmt.Sprintf("%s%s", URL, *wordPtr)
+	// fmt.Println(buffer.String())
 	//var content []byte
-	base, date, rates := FromURL(URLName)
+	exrates := FromURL(URLName)
 	//reader := bufio.newReader(os.Stdin)
 	//var opt string
 
@@ -60,14 +60,14 @@ func main() {
 	//DocName := "rates.json"
 	//content := FromDocument(DocName)
 
-	fmt.Printf("Base value: %s \n", base)
-	fmt.Printf("Date: %s \n", date)
+	fmt.Printf("Base value: %s \n", exrates.Base)
+	fmt.Printf("Date: %s \n", exrates.Date)
 	//	if len(exrates.Rates) != 0 {aaasdas
 	//	number := exrates.Rates["HUF"]
 	//	fmt.Printf("Test: %f \n", number)kk
 	//fmt.Printf("Rates: %v \n", exrates.Rates)
 	//}
-	for k, v := range rates { // map
+	for k, v := range exrates.Rates { // map
 		fmt.Printf("Currency: %s Value: %8.2f\n", k, v)
 	}
 
@@ -75,7 +75,8 @@ func main() {
 	//fmt.Println("Test: %v", URL)
 }
 
-func FromURL(URLName string) (string, string, map[string]float32) {
+// func FromURL(URLName string) (string, string, map[string]float32) {
+func FromURL(URLName string) ExRates {
 	spaceClient := http.Client{
 		Timeout: time.Second * 10, // 2 secs
 	}
@@ -98,5 +99,6 @@ func FromURL(URLName string) (string, string, map[string]float32) {
 		fmt.Println("Error JSON Unmarshalling")
 		fmt.Println(err2.Error())
 	}
-	return exrates.Base, exrates.Date, exrates.Rates
+	// return exrates.Base, exrates.Date, exrates.Rates
+	return exrates
 }
