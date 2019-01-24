@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 )
 
-type ExRates struct {
+type ExRates struct { // comment
 	Rates map[string]float32 `json:"rates"` //map
 	Base  string             `json:"base"`
 	Date  string             `json:"date"`
@@ -31,10 +31,10 @@ func main() {
 	//	if len(exrates.Rates) != 0 {
 	//	number := exrates.Rates["HUF"]
 	//	fmt.Printf("Test: %f \n", number)
-	fmt.Printf("Rates: %v \n", exrates.Rates)
+	//fmt.Printf("Rates: %v \n", exrates.Rates)
 	//}
-	//for _, x := range exrates.Rates { // map
-	//	fmt.Printf("Currency: ", x, "Value: ", exrates.Rates[x], "\n")
-	//}
+	for k, v := range exrates.Rates { // map
+		fmt.Printf("Currency: %s Value: \t%.2f\n", k, v)
+	}
 
 }
