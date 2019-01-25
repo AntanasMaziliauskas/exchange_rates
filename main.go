@@ -7,7 +7,7 @@ import (
 	"github.com/AntanasMaziliauskas/exchange_rates/rates"
 )
 
-//This function lets me input a currency using flag and prints out the information of that specific currency
+//This function lets me input a currency using flag and prints out the information of that specific currency..
 func main() {
 
 	base := flag.String("currency", "USD", "a string")
