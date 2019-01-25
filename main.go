@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 
 	"github.com/AntanasMaziliauskas/exchange_rates/rates"
 )
@@ -18,8 +19,15 @@ func main() {
 	URLNameStart := fmt.Sprintf(rates.URL, *startdate, *base)
 	URLNameEnd := fmt.Sprintf(rates.URL, *enddate, *base)
 
-	exratesStart := rates.FromURL(URLNameStart)
-	exratesEnd := rates.FromURL(URLNameEnd)
+	if errStart, exratesStart := rates.FromURL(URLNameStart); errStart != nil {
+		fmt.Println(errStart.Error())
+		log.Fatal("Error")
+	}
+	errEnd, exratesEnd := rates.FromURL(URLNameEnd)
+	if errEnd != nil {
+		fmt.Println(errStart.Error())
+		log.Fatal("Error")
+	}
 
 	fmt.Printf("Base value: %s \n", exratesStart.Base)
 	fmt.Printf("Start Date: %s \n", exratesStart.Date)
