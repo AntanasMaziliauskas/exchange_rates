@@ -17,22 +17,27 @@ type ExRates struct {
 	Date  string             `json:"date"`
 }
 
+const URL = "https://api.exchangeratesapi.io/%s?base=%s"
+
 //This function lets me input a currency using flag and prints out the information of that specific currency
 func main() {
 
-	const URL = "https://api.exchangeratesapi.io/latest?base="
-
-	wordPtr := flag.String("currency", "USD", "a string")
+	base := flag.String("currency", "USD", "a string")
+	startdate := flag.String("startdate", "2018-02-02", "a string")
+	enddate := flag.String("enddate", "2018-02-06", "a string")
 	flag.Parse()
 
-	URLName := fmt.Sprintf("%s%s", URL, *wordPtr)
+	URLNameStart := fmt.Sprintf(URL, *startdate, *base)
+	URLNameEnd := fmt.Sprintf(URL, *enddate, *base)
 
-	exrates := FromURL(URLName)
+	exratesStart := FromURL(URLNameStart)
+	exratesEnd := FromURL(URLNameEnd)
 
-	fmt.Printf("Base value: %s \n", exrates.Base)
-	fmt.Printf("Date: %s \n", exrates.Date)
-	for k, v := range exrates.Rates {
-		fmt.Printf("Currency: %s Value: %8.2f\n", k, v)
+	fmt.Printf("Base value: %s \n", exratesStart.Base)
+	fmt.Printf("Start Date: %s \n", exratesStart.Date)
+	fmt.Printf("End Date: %s \n", exratesEnd.Date)
+	for k, v := range exratesStart.Rates {
+		fmt.Printf("Currency: %s Difference: %5.2f%%\n", k, Percentage(v, exratesEnd.Rates[k]))
 	}
 }
 
@@ -55,10 +60,15 @@ func FromURL(URLName string) ExRates {
 	}
 	exrates := ExRates{}
 	// json.Unmarshal(content, &friends)
-	err2 := json.Unmarshal(body, &exrates)
-	if err2 != nil {
+	if err := json.Unmarshal(body, &exrates); err != nil {
 		fmt.Println("Error JSON Unmarshalling")
-		fmt.Println(err2.Error())
+		fmt.Println(err.Error())
+		log.Fatal("error")
 	}
 	return exrates
+}
+
+func Percentage(start, end float32) float32 {
+	percentDiff := (end - start) * 100 / end
+	return percentDiff
 }
