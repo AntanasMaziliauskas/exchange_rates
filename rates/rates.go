@@ -2,9 +2,7 @@ package rates
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
-	"log"
 	"math"
 	"net/http"
 	"time"
@@ -32,18 +30,21 @@ func FromURL(URLName string) (ExRates, error) {
 	}
 	res, getErr := spaceClient.Do(req)
 	if getErr != nil {
-		log.Fatal(getErr)
+		return exrates, getErr
+		//log.Fatal(getErr)
 	}
 	body, readErr := ioutil.ReadAll(res.Body)
 	if readErr != nil {
-		log.Fatal(readErr)
+		return exrates, readErr
+		//	log.Fatal(readErr)
 	}
 	//exrates := ExRates{}
 	// json.Unmarshal(content, &friends)
 	if err := json.Unmarshal(body, &exrates); err != nil {
-		fmt.Println("Error JSON Unmarshalling")
-		fmt.Println(err.Error())
-		log.Fatal("error")
+		return exrates, err
+		//	fmt.Println("Error JSON Unmarshalling")
+		//	fmt.Println(err.Error())
+		//	log.Fatal("error")
 	}
 	return exrates, nil
 }

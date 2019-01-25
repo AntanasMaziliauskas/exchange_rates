@@ -19,14 +19,13 @@ func main() {
 	URLNameStart := fmt.Sprintf(rates.URL, *startdate, *base)
 	URLNameEnd := fmt.Sprintf(rates.URL, *enddate, *base)
 
-	if errStart, exratesStart := rates.FromURL(URLNameStart); errStart != nil {
-		fmt.Println(errStart.Error())
-		log.Fatal("Error")
+	if err, exratesStart := rates.FromURL(URLNameStart); err != nil {
+		//	fmt.Println(errStart.Error())
+		log.Fatal(err)
 	}
-	errEnd, exratesEnd := rates.FromURL(URLNameEnd)
-	if errEnd != nil {
-		fmt.Println(errStart.Error())
-		log.Fatal("Error")
+	if err, exratesEnd := rates.FromURL(URLNameEnd); err != nil {
+		//fmt.Println(errStart.Error())
+		log.Fatal(err)
 	}
 
 	fmt.Printf("Base value: %s \n", exratesStart.Base)
