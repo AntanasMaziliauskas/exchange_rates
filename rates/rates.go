@@ -10,7 +10,7 @@ import (
 
 //ExRates structure used to unmarshal JSON
 type ExRates struct {
-	Rates map[string]float32 `json:"rates"`
+	Rates map[string]float64 `json:"rates"`
 	Base  string             `json:"base"`
 	Date  string             `json:"date"`
 }
@@ -23,24 +23,26 @@ func FromURL(URLName string) (ExRates, error) {
 		Timeout: time.Second * 10, // 2 secs
 	}
 	exrates := ExRates{}
-	req, err := http.NewRequest(http.MethodGet, URLName, nil)
-	if err != nil {
+	var err error
+	var req *http.Request
+	var res *http.Response
+	var body []byte
+
+	if req, err = http.NewRequest(http.MethodGet, URLName, nil); err != nil {
 		return exrates, err
 		//fmt.Println(err.Error())
 	}
-	res, getErr := spaceClient.Do(req)
-	if getErr != nil {
-		return exrates, getErr
+	if res, err = spaceClient.Do(req); err != nil {
+		return exrates, err
 		//log.Fatal(getErr)
 	}
-	body, readErr := ioutil.ReadAll(res.Body)
-	if readErr != nil {
-		return exrates, readErr
+	if body, err = ioutil.ReadAll(res.Body); err != nil {
+		return exrates, err
 		//	log.Fatal(readErr)
 	}
 	//exrates := ExRates{}
 	// json.Unmarshal(content, &friends)
-	if err := json.Unmarshal(body, &exrates); err != nil {
+	if err = json.Unmarshal(body, &exrates); err != nil {
 		return exrates, err
 		//	fmt.Println("Error JSON Unmarshalling")
 		//	fmt.Println(err.Error())

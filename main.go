@@ -18,12 +18,14 @@ func main() {
 
 	URLNameStart := fmt.Sprintf(rates.URL, *startdate, *base)
 	URLNameEnd := fmt.Sprintf(rates.URL, *enddate, *base)
+	var exratesStart, exratesEnd rates.ExRates
+	var err error
 
-	if err, exratesStart := rates.FromURL(URLNameStart); err != nil {
+	if exratesStart, err = rates.FromURL(URLNameStart); err != nil {
 		//	fmt.Println(errStart.Error())
 		log.Fatal(err)
 	}
-	if err, exratesEnd := rates.FromURL(URLNameEnd); err != nil {
+	if exratesEnd, err = rates.FromURL(URLNameEnd); err != nil {
 		//fmt.Println(errStart.Error())
 		log.Fatal(err)
 	}
